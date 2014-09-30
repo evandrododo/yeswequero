@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet" href="css/normalize.min.css">
+        <link rel="stylesheet" href="css/main.css">
+
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+        <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+		<script>
+		$(document).ready(function(){
+			
+		});
+		</script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+        <div class="header-container">
+            <header class="wrapper clearfix">
+                <h1 class="title">YES WE QUERO</h1>
+            </header>
+        </div>
+
+        <div class="main-container">
+            <div class="main wrapper clearfix">
+
+                <article>
+					<p>Mostre seu apoio ao candidato Eduardo Jorge no Facebook</p>				
+					 <button id="getbtn" class="btn" onclick="getProfilePicture()">Personalize sua foto</button> 
+					 <button id="setbtn" class="btn" onclick="setProfilePicture()" style="display: none;">Salvar no Facebook</button> 
+					 <div class="photo"></div>
+					 <div id="fb-root"></div>
+                    <script>
+					  var pid;
+					  var imgURL;
+					  window.fbAsyncInit = function() {
+						FB.init({
+						  appId      : '342337162600646',
+						  xfbml      : true,
+						  version    : 'v2.1'
+						});
+					  };
+
+					  (function(d, s, id){
+						 var js, fjs = d.getElementsByTagName(s)[0];
+						 if (d.getElementById(id)) {return;}
+						 js = d.createElement(s); js.id = id;
+						 js.src = "//connect.facebook.net/en_US/sdk.js";
+						 fjs.parentNode.insertBefore(js, fjs);
+					   }(document, 'script', 'facebook-jssdk'));
+					   
+					   function getProfilePicture() {					
+						   FB.login(function(response) {
+							   if (response.authResponse) {
+								 console.log('Welcome!  Fetching your information.... ');
+
+								 FB.api('/me', function(response) {
+								   console.log('Good to see you, ' + response.name + '.' );
+								   pid = response.id;
+								   console.log(pid);
+								 });
+								 FB.api(
+									"/me/picture",
+									{
+										"redirect": false,
+										"height": "9999",
+										"type": "normal",
+										"width": "9999"
+									},
+									function (response) {
+										if (response.data){
+											console.log(response.data.url);
+											$.get( "http://evandrocarreira.com.br/site/yeswequero/",
+												{ img: response.data.url } ,
+												function( data ) {
+													
+														imgURL = 'http://evandrocarreira.com.br/site/yeswequero/?img='+response.data.url;
+														$('.photo').append('<img  height="200" width="200" src=\"' + data.url + '\">');
+														$('#getbtn').css("display", "none");
+														$('#setbtn').css("display", "block");
+													
+												});
+											imgURL = 'http://evandrocarreira.com.br/site/yeswequero/?img='+escape(response.data.url);
+														$('.photo').append('<img  height="200" width="200" src=\"' + imgURL + '\">');
+														$('#getbtn').css("display", "none");
+														$('#setbtn').css("display", "block");
+										}
+										
+									});
+							   } else {
+								 console.log('User cancelled login or did not fully authorize.');
+							   }
+							 });
+						}
+						function setProfilePicture(){
+							savePhoto()	;
+						}
+						
+						function savePhoto(){
+							FB.login(
+							  function(response) {
+								console.log(response.authResponse.grantedScopes);
+								if(response.authResponse.grantedScopes == "public_profile,publish_actions" ){
+									FB.api(
+										"/me/photos",
+										"POST",
+										{
+											"url": imgURL,
+											message: 'YES WE QUERO'
+										},
+										function (response) {
+											if(response.id){
+												console.log(response.id);
+												//alert('Foi');
+												window.location = 'https://www.facebook.com/photo.php?fbid=' + response.id + '&makeprofile=1';
+											}
+											else{
+												//alert('Não foi');
+											}
+										}
+									);
+								}
+								else{
+									alert('Nao autorizado');
+								}
+							  },
+							  {
+								scope: 'publish_actions',
+								return_scopes : true
+							  }
+							);						
+						}
+					</script>
+                </article>
+
+            </div> <!-- #main -->
+        </div> <!-- #main-container -->
+
+        <div class="footer-container">
+            <footer class="wrapper">
+                
+            </footer>
+        </div>
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.1.min.js"><\/script>')</script>
+
+        <script src="js/main.js"></script>
+
+        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+        <script>
+            (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+            e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+            e.src='//www.google-analytics.com/analytics.js';
+            r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+            ga('create','UA-XXXXX-X');ga('send','pageview');
+        </script>
+    </body>
+</html>
