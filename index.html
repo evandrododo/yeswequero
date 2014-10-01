@@ -6,13 +6,15 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title></title>
+        <title>VOTE 43 - Eduardo Jorge</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="stylesheet" href="css/normalize.min.css">
         <link rel="stylesheet" href="css/main.css">
 
+        <link rel="icon" href="favicon-16.png" sizes="16x16"/>
+        <link rel="icon" href="favicon-32.png" sizes="32x32"/>
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
         <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 		<script>
@@ -28,7 +30,7 @@
 
         <div class="header-container">
             <header class="wrapper clearfix">
-                <h1 class="title">YES WE QUERO</h1>
+                <h1 class="title">YES WE <span class="title-claro"> QUERO</span></h1>
             </header>
         </div>
 
@@ -36,12 +38,14 @@
             <div class="main wrapper clearfix">
 
                 <article>
-					<p>Mostre seu apoio ao candidato Eduardo Jorge no Facebook</p>				
+          <p><h3>Apoie Eduardo Jorge no facebook!</h3></p>
+          <p>Insira aqui a sua <strong>#hashtag</strong> e mude sua foto de perfil:</p>	
+          <p><input type="text" name="hashtag" id="hashtag" placeholder="YESWEQUERO">		</p>
 					 <button id="getbtn" class="btn" onclick="getProfilePicture()">Personalize sua foto</button> 
-					 <button id="setbtn" class="btn" onclick="setProfilePicture()" style="display: none;">Salvar no Facebook</button> 
+					 <button id="setbtn" class="btn" onclick="setProfilePicture()" style="display: none;">Salvar no Facebook</button> <br>
 					 <div class="photo"></div>
 					 <div id="fb-root"></div>
-                    <script>
+            <script>
 					  var pid;
 					  var imgURL;
 					  window.fbAsyncInit = function() {
@@ -85,14 +89,10 @@
 												{ img: response.data.url } ,
 												function( data ) {
 													
-														imgURL = 'http://evandrocarreira.com.br/site/yeswequero/?img='+response.data.url;
-														$('.photo').append('<img  src=\"' + data.url + '\">');
-														$('#getbtn').css("display", "none");
-														$('#setbtn').css("display", "block");
-													
 												});
-											imgURL = 'http://evandrocarreira.com.br/site/yeswequero/?img='+escape(response.data.url);
-														$('.photo').append('<img  src=\"' + imgURL + '\">');
+											imgURL = 'http://evandrocarreira.com.br/site/yeswequero/?hash='+encodeURIComponent($("#hashtag").val())+'&img='+encodeURIComponent(response.data.url);
+                            $('.main-container').addClass("sembg");
+                            $('.photo').append('<img  src=\"' + imgURL + '\">');
 														$('#getbtn').css("display", "none");
 														$('#setbtn').css("display", "block");
 										}
@@ -101,7 +101,11 @@
 							   } else {
 								 console.log('User cancelled login or did not fully authorize.');
 							   }
-							 });
+							 },
+              {
+              scope: 'publish_actions',
+              return_scopes : true
+              });
 						}
 						function setProfilePicture(){
 							savePhoto()	;
@@ -109,36 +113,38 @@
 						
 						function savePhoto(){
 							FB.login(
-							  function(response) {
-								console.log(response.authResponse.grantedScopes);
-								if(response.authResponse.grantedScopes == "public_profile,publish_actions" ){
-									FB.api(
-										"/me/photos",
-										"POST",
-										{
-											"url": imgURL,
-											message: 'YES WE QUERO'
-										},
-										function (response) {
-											if(response.id){
-												console.log(response.id);
-												//alert('Foi');
-												window.location = 'https://www.facebook.com/photo.php?fbid=' + response.id + '&makeprofile=1';
-											}
-											else{
-												//alert('Não foi');
-											}
-										}
-									);
-								}
-								else{
-									alert('Nao autorizado');
-								}
-							  },
-							  {
-								scope: 'publish_actions',
-								return_scopes : true
-							  }
+							  function(response) 
+                {
+  								console.log(response.authResponse.grantedScopes);
+                  if(response.authResponse.grantedScopes == "public_profile,publish_actions" ){
+  									FB.api(
+  										"/me/photos",
+  										"POST",
+  										{
+  											"url": imgURL,
+  											message: $("#hashtag").val()
+  										},
+  										function (response) {
+  											if(response.id){
+  												console.log(response.id);
+  												//alert('Foi');
+  												window.location = 'https://www.facebook.com/photo.php?fbid=' + response.id + '&makeprofile=1';
+  											}
+  											else{
+  												//alert('Não foi');
+  											}
+  										}
+  									);
+  								}
+  								else{
+  									alert('Putz! \nSe você está vendo esse aviso, infelizmente o facebook ainda não autorizou o upload de fotos do App :(\n\nPara poder usar essa foto lindona aí atrás de perfil, vc precisa salvar ela e adicionar pelo facebook (Mas é rapidinho :P)');
+  								}
+						    },
+  						  {
+    							scope: 'publish_actions',
+    							return_scopes : true,
+                  auth_type: 'rerequest'
+  						  }
 							);						
 						}
 					</script>
@@ -149,7 +155,14 @@
 
         <div class="footer-container">
             <footer class="wrapper">
-                
+                <span class="right">Desenvolvido por <a href="http://evandrocarreira.com.br">Evandro Carreira</a> e <a href="https://www.facebook.com/profile.php?id=100008057801235">Rafael Miranda</a>
+                </span>
+                <span class="left">&nbsp;Não temos qualquer ligação com o Candidato ou com o partido.
+                :)&nbsp;
+                </span>
+                <span class="left">
+                <a href="//www.iubenda.com/privacy-policy/763697" class="iubenda-white iubenda-embed" title="Privacy Policy">Privacy Policy</a><script type="text/javascript">(function (w,d) {var loader = function () {var s = d.createElement("script"), tag = d.getElementsByTagName("script")[0]; s.src = "//cdn.iubenda.com/iubenda.js"; tag.parentNode.insertBefore(s,tag);}; if(w.addEventListener){w.addEventListener("load", loader, false);}else if(w.attachEvent){w.attachEvent("onload", loader);}else{w.onload = loader;}})(window, document);</script>
+                </span>
             </footer>
         </div>
 
@@ -158,14 +171,5 @@
 
         <script src="js/main.js"></script>
 
-        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
-        <script>
-            (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
-            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
-            e=o.createElement(i);r=o.getElementsByTagName(i)[0];
-            e.src='//www.google-analytics.com/analytics.js';
-            r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-            ga('create','UA-XXXXX-X');ga('send','pageview');
-        </script>
     </body>
 </html>

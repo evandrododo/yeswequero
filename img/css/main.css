@@ -110,19 +110,6 @@ body {
     color: #dcedd7;
 }
 
-.left {
-  position:relative;
-  float: left;
-  display: inline-block;
-  font-size:14px;
-}
-.right {
-  position:relative;
-  float: right;
-  display: inline-block;
-  margin-right: 20px;
-  font-size:14px;
-}
 /* ==============
     MOBILE: Menu
    ============== */
@@ -132,9 +119,10 @@ nav ul {
     padding: 0;
 }
 
- a {
+nav a {
+    display: block;
     margin-bottom: 10px;
-    padding: 15px 10px;
+    padding: 15px 0;
 
     text-align: center;
     text-decoration: none;
@@ -142,17 +130,15 @@ nav ul {
 
     color: white;
     background: #e44d26;
-    transition: all 0.4s;
 }
 
- a:hover,
- a:visited {
+nav a:hover,
+nav a:visited {
     color: white;
 }
 
- a:hover {
-    transition: all 0.4s;
-    background: #9E3014;
+nav a:hover {
+    text-decoration: underline;
 }
 
 /* ==============
@@ -175,8 +161,6 @@ nav ul {
 .footer-container footer {
     color: white;
     padding: 20px 0;
-    display: inline-block;
-    width:100%;
 }
 
 /* ===============
@@ -186,7 +170,6 @@ nav ul {
 .ie7 .title {
     padding-top: 20px;
 }
-
 
 /* ==========================================================================
    Author's custom styles
